@@ -76,7 +76,7 @@ OceanBase 初赛基于一套适合初学者实践的数据库实训平台 MiniOB
 
 搭建开发环境是一个比较耗时而且繁琐的事情，特别是对于初学者。为了让大家更快地上手 MiniOB，本仓库基于 Gitpod 建立了快速在线开发平台。点击下面的按钮即可一键体验（建议使用 Chrome 浏览器）。
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/oceanbase/miniob)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/slicesteak/miniob)
 
 > 注意：这个链接打开的是MiniOB主仓库的开发环境，同学们需要通过gitpod进入自己的仓库开发环境。
 

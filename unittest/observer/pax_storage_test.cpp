@@ -36,7 +36,7 @@ using namespace common;
 class PaxRecordFileScannerWithParam : public testing::TestWithParam<int>
 {};
 
-TEST_P(PaxRecordFileScannerWithParam, DISABLED_test_file_iterator)
+TEST_P(PaxRecordFileScannerWithParam, test_file_iterator)
 {
   int               record_insert_num = GetParam();
   VacuousLogHandler log_handler;
@@ -176,7 +176,7 @@ TEST_P(PaxRecordFileScannerWithParam, DISABLED_test_file_iterator)
 class PaxPageHandlerTestWithParam : public testing::TestWithParam<int>
 {};
 
-TEST_P(PaxPageHandlerTestWithParam, DISABLED_PaxPageHandler)
+TEST_P(PaxPageHandlerTestWithParam, PaxPageHandler)
 {
   int               record_num = GetParam();
   VacuousLogHandler log_handler;
@@ -250,6 +250,9 @@ TEST_P(PaxPageHandlerTestWithParam, DISABLED_PaxPageHandler)
     float float_val = count + float_base;
     rc              = iterator.next(record);
     ASSERT_EQ(memcmp(record.data(), &int_val, sizeof(int)), 0);
+    if(record.data(), &int_val, sizeof(int) != 0){
+      printf("record data:%d, int_val:%d\n", *(int*)record.data(), int_val);
+    }
     ASSERT_EQ(memcmp(record.data() + 4, &float_val, sizeof(float)), 0);
     ASSERT_EQ(memcmp(record.data() + 8, "12345678910", 4 + 7), 0);
     ASSERT_EQ(rc, RC::SUCCESS);

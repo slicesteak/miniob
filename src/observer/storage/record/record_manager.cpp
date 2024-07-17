@@ -436,11 +436,10 @@ RC PaxRecordPageHandler::insert_record(const char *data, RID *rid)
   }
 
   // actual insert
-  int* col_idx = (int*)(frame_->data() + page_header_->col_idx_offset);
-  char* record_data = frame_->data() + page_header_->data_offset;
-    
+  int tuple_offset = 0;
   for(int i=0;i<page_header_->column_num; i++){
-    memcpy(record_data + col_idx[i], get_field_data(index, i), get_field_len(i));
+    memcpy(get_field_data(index, i), data + tuple_offset, get_field_len(i));
+    tuple_offset += get_field_len(i);
   }
 
   frame_->mark_dirty();
@@ -511,13 +510,28 @@ RC PaxRecordPageHandler::get_record(const RID &rid, Record &record)
 // TODO: specify the column_ids that chunk needed. currenly we get all columns
 RC PaxRecordPageHandler::get_chunk(Chunk &chunk)
 {
-
-  int* col_idx = (int*)(frame_->data() + page_header_->col_idx_offset);
-  char* record_data = frame_->data() + page_header_->data_offset;
-
+  Bitmap bitmap(bitmap_, page_header_->record_capacity);
+  chunk.reset_data();
   for(int i=0; i<chunk.column_num(); i++){
     int target_idx = chunk.column_ids(i);
-    chunk.column(i).append(record_data + col_idx[target_idx], page_header_->record_num);
+
+    int slot_idx = 0;
+    int added_cnt = 0;
+
+    char* col_addr = get_field_data(0, target_idx);
+    int col_delta = get_field_len(target_idx);
+
+    while(added_cnt < page_header_->record_num){
+      if(bitmap.get_bit(slot_idx)){
+
+        chunk.column(i).append_one(col_addr); // 每次都要算乘法，比较低效，先就这样了
+        added_cnt++;
+      }
+
+      col_addr += col_delta;
+      slot_idx++;
+    }
+    
   }
   // exit(-1);
   return RC::SUCCESS;
